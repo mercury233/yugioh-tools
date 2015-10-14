@@ -1,0 +1,238 @@
+<HTA:APPLICATION ID="iDuelMatchGroup" APPLICATIONNAME="iDuelMatchGroup" CAPTION="yes" MAXIMIZEBUTTON="no" INNERBORDER="no" SCROLL="no" SELECTION="no" SHOWINTASKBAR="yes" SINGLEINSTANCE="yes" SYSMENU="yes" ICON="u.ico"></HTA:APPLICATION>
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gbk">
+<title>iDuel周赛分组管理</title>
+<style type="text/css">
+body {
+margin:5px;
+background:#20272D;
+}
+* {
+font-family:"宋体";
+font-size:14px;
+color:#000000;
+}
+
+.button {
+	-moz-box-shadow:inset 0px -3px 7px 0px #29bbff;
+	-webkit-box-shadow:inset 0px -3px 7px 0px #29bbff;
+	box-shadow:inset 0px -3px 7px 0px #29bbff;
+	background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #2dabf9), color-stop(1, #0688fa));
+	background:-moz-linear-gradient(top, #2dabf9 5%, #0688fa 100%);
+	background:-webkit-linear-gradient(top, #2dabf9 5%, #0688fa 100%);
+	background:-o-linear-gradient(top, #2dabf9 5%, #0688fa 100%);
+	background:-ms-linear-gradient(top, #2dabf9 5%, #0688fa 100%);
+	background:linear-gradient(to bottom, #2dabf9 5%, #0688fa 100%);
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#2dabf9', endColorstr='#0688fa',GradientType=0);
+	background-color:#2dabf9;
+	-moz-border-radius:3px;
+	-webkit-border-radius:3px;
+	border-radius:3px;
+	border:1px solid #0b0e07;
+	display:inline-block;
+	cursor:pointer;
+	color:#ffffff;
+	font-family:arial;
+	font-size:14px;
+	padding:9px 23px;
+	text-decoration:none;
+	text-shadow:0px 1px 0px #263666;
+}
+.button:hover {
+	background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #0688fa), color-stop(1, #2dabf9));
+	background:-moz-linear-gradient(top, #0688fa 5%, #2dabf9 100%);
+	background:-webkit-linear-gradient(top, #0688fa 5%, #2dabf9 100%);
+	background:-o-linear-gradient(top, #0688fa 5%, #2dabf9 100%);
+	background:-ms-linear-gradient(top, #0688fa 5%, #2dabf9 100%);
+	background:linear-gradient(to bottom, #0688fa 5%, #2dabf9 100%);
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#0688fa', endColorstr='#2dabf9',GradientType=0);
+	background-color:#0688fa;
+}
+.button:active {
+	position:relative;
+	top:1px;
+}
+
+#textarea {
+	position:absolute;
+	width:430px;
+	height:500px;
+	z-index:1;
+	left: 10px;
+	top: 50px;
+	line-height:16px;
+}
+
+#groupnum {
+	display:inline-block;
+	border:#000000 0px solid;
+	margin-left:0px;
+	margin-bottom:4px;
+	margin-right:2px;
+	padding:2px;
+	background-color:#FFFFFF;
+	width:16px;
+	height:24px;
+}
+
+#statusbar {
+	border:#000000 1px solid;
+	padding:2px;
+	background-color:#FFFFFF;
+	position:absolute;
+	width:430px;
+	height:24px;
+	line-height:24px;
+	z-index:2;
+	left: 10px;
+	top: 555px;
+}
+</style>
+</head>
+
+<body onLoad="resizewindow(450,590);">
+<span class="button" onclick="format();">整理</span>
+<span class="button" onclick="shuffle();" onMouseUp="this.blur();">乱序</span>
+<span class="button" onclick="group();" onMouseUp="this.blur();">分组</span>
+<input type="text" id="groupnum" value="2">
+<span class="button" onclick="copyresult();" onMouseUp="this.blur();">复制</span>
+<span class="button" onclick="paste();" onMouseUp="this.blur();">粘贴</span>
+<textarea id="textarea">
+921439818+尸体
+405973386+尼亚
+512544046+侠客
+</textarea>
+<div id="statusbar">大家好我是新人</div>
+
+
+<script type="text/javascript">
+tab="	";
+var widthfix;
+var heightfix;
+var textarea=document.getElementById("textarea");
+var statusbar=document.getElementById("statusbar");
+var groupnum=document.getElementById("groupnum");
+
+function resizewindow(width,height)
+{
+if (!widthfix)
+{
+window.resizeTo(width+100,height+100);
+widthfix=width+100-window.document.body.clientWidth;
+heightfix=height+100-window.document.body.clientHeight
+}
+window.resizeTo(width+widthfix,height+heightfix);
+}
+
+function format()
+{
+list=new Array();
+list=textarea.value.split("\n");
+list2=new Array();
+
+for(i=0;i<list.length;i++)
+	{
+	if (list[i]=="") continue;
+	list2[list2.length]=list[i];
+	}
+
+for(i=0;i<list2.length;i++)
+	{
+	n=0;
+	for(j=0;j<list.length;j++)
+		{
+		a=list[j];
+		b=list2[i];
+		if(a==b && a!="")
+			{
+			n=n+1;
+			}
+		}
+	if(n>1)
+		{
+		alert("有"+n+"个相同信息："+list2[i]);
+		for(j=0;j<list.length;j++)
+			{
+			if(list2[i]==list[j])
+				{
+				list[j]="";
+				}
+			}
+		}
+	}
+
+textarea.value="";
+for(i=0;i<list2.length;i++)
+	{
+	textarea.value=textarea.value+list2[i]+"\n";
+	}
+
+statusbar.innerHTML="共有"+list2.length+"条信息。";
+}
+
+function shuffle()
+{
+//alert(textarea.value);
+list=textarea.value.split("\n");
+textarea.value="";
+for(i=1;i<=500;i++)
+	{
+	a=Math.floor(Math.random()*list.length);
+	b=Math.floor(Math.random()*list.length);
+	tmp=list[a];
+	list[a]=list[b];
+	list[b]=tmp;
+	}
+for(i=0;i<list.length;i++)
+	{
+	textarea.value=textarea.value+ ((list[i] != "") ? (list[i]+"\n") : "");
+	}
+}
+
+function group()
+{
+num=groupnum.value;
+shuffle();
+list2=new Array();
+list2=textarea.value.split("\n");
+list=new Array();
+for(i=0;i<list2.length;i++)
+	{
+	if (list2[i]=="") continue;
+	list[list.length]=list2[i];
+	}
+
+groups=new Array();
+for(i=0;i<Math.ceil(list.length/num);i++)
+	{
+	groups[i]="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz一二三四五六七八九十甲乙丙丁戊己庚辛壬癸子丑寅卯辰巳午未申酉戌亥".substr(i,1);
+	}
+
+textarea.value="";
+
+for(i=0;i<groups.length;i++)
+	{
+	textarea.value=textarea.value+"["+groups[i]+"]组：\n";
+	for(j=0;j<num;j++)
+		{
+		textarea.value=textarea.value+"   ["+(j+1)+"号]"+((list.length) ? list.pop() : "轮空")+"\n";
+		}
+	}
+}
+
+function copyresult()
+{
+window.clipboardData.setData("Text",textarea.value);
+statusbar.innerHTML="已复制到剪贴板。";
+}
+
+function paste()
+{
+tmp=window.clipboardData.getData("Text");
+textarea.value=textarea.value+tmp+"\n";
+}
+</script>
+</body>
+</html>
